@@ -1,0 +1,152 @@
+/* css/style.css */
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #013452;
+    color: rgb(187, 181, 181);
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body > header {
+    height: 70px;
+    background: #011825;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+}
+
+body > footer {
+    background: #011825;
+    height: 120px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+body > header nav a {
+    color: #fff;
+    padding: 0 0 5px 0;
+    text-decoration: none;
+}
+
+body > header nav a:visited {
+    color: gray;
+}
+
+body > header nav a:hover {
+    color: rgb(54, 9, 218);
+    border-bottom: 3px solid rgb(11, 156, 182);
+}
+
+body > header nav a.active {
+    color: rgb(54, 9, 218);
+    border-bottom: 3px outset rgb(11, 156, 182);
+}
+
+.logotipo {
+    width: 277px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.logotipo img {
+    width: 45px;
+    height: 45px;
+}
+
+.logotipo h1 {
+    margin: 9px 0 0 0;
+}
+
+.logotipo h1 span.if {
+    color: rgb(117, 184, 17);
+}
+
+body > main {
+    min-height: calc(100vh - 307px);
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+}
+
+body > div h1, h3 {
+    margin-left: 25px;
+}
+
+body > div h1 {
+    padding-top: 10px;
+}
+
+body > div h3 {
+    padding-top: 5px;
+}
+
+body > div p {
+    margin-left: 10px;
+}
+
+form {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+}
+
+input::placeholder {
+    color: #aaaaaa;
+    opacity: 1;
+}
+
+input {
+    width: 500px;
+    padding: 10px;
+    border-radius: 25px;
+    border: 1px solid #333333;
+    background-color: #333333;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+form > button {
+    background-color: #013452;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+form > button img {
+    width: 50px;
+    height: 50px;
+    background-color: #013452;
+    
+}
+
+form > button:hover, form > button:active {
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+div#busca {
+    display: flex;
+    justify-content: center;
+}
