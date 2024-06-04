@@ -1,4 +1,5 @@
-const search = []
+const library = []
+const cart = []
 
 const searchGame = async (event) => {
     event.preventDefault();
@@ -19,16 +20,22 @@ const searchGame = async (event) => {
 
         console.log(result)
 
+        let searchGame = ""
 
         result.forEach(element => {
-            search = element.appid
+            searchGame += `
+            <div class="game">
+                <a hidden>${element.appid}</a>
+                <img src=${element.logo} alt="logo">
+                <a>${element.name}</a>
+                <div class="gametype">
+                    <button onclick=libraryAppid(${element.appid})>Biblioteca</button>
+                    <button onclick=cartAppid(${element.appid})>Carrinho</button>
+                </div>
+            </div>`
         });
 
-        console.log(search)
-        
-        search.forEach(element => {
-            searchCard(element)
-        })
+        document.getElementById('resultado').innerHTML = searchGame
 
     } catch (error) {
         alert('Erro ao consultar ação: ' + error.message);
@@ -36,25 +43,12 @@ const searchGame = async (event) => {
     }
 }
 
-async function searchCard(searchGame){
-    try {
-        const response = await fetch(`https://cors-anywhere.herokuapp.com/https://steamcommunity.com/actions/SearchApps/${searchGame}`);
-        
-        if (!response.ok) {
-            throw new Error('Erro ao consultar ação!');
-        }
+function libraryAppid(appid) {
+    library.push(appid)
+    console.log(library)
+}
 
-        const result = await response.json();
-
-        document.getElementById('resultado').innerHTML += `
-        <div>
-            <a hidden>${result.appid}</a>
-            <img src=${result.header_image} alt="logo">
-            <a>${result.name}</a>
-        </div>
-    `
-    } catch (error) {
-        alert('Erro ao consultar ação: ' + error.message);
-        console.error('ERROR', error);
-    }
+function cartAppid(appid) {
+    cart.push(appid)
+    console.log(cart)
 }
