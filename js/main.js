@@ -1,6 +1,18 @@
-const library = []
-const cart = []
+// Inicializa os arrays com os dados do localStorage, se existirem
+let library = JSON.parse(localStorage.getItem('library')) || [];
+let wish = JSON.parse(localStorage.getItem('wish')) || [];
 
+// Função para salvar arrays no localStorage
+const saveToLocalStorage = () => {
+    localStorage.setItem('library', JSON.stringify(library));
+    localStorage.setItem('wish', JSON.stringify(wish));
+}
+
+const removeDuplicates = (array) => {
+    return [...new Set(array)];
+}
+
+// Função para buscar jogo
 const searchGame = async (event) => {
     event.preventDefault();
 
@@ -18,9 +30,9 @@ const searchGame = async (event) => {
 
         const result = await response.json();
 
-        console.log(result)
+        console.log(result);
 
-        let searchGame = ""
+        let searchGame = "";
 
         result.forEach(element => {
             searchGame += `
@@ -29,13 +41,13 @@ const searchGame = async (event) => {
                 <img src=${element.logo} alt="logo">
                 <a>${element.name}</a>
                 <div class="gametype">
-                    <button onclick=libraryAppid(${element.appid})>Biblioteca</button>
-                    <button onclick=cartAppid(${element.appid})>Carrinho</button>
+                    <button onclick="libraryAppid(${element.appid})">Library</button>
+                    <button onclick="wishAppid(${element.appid})">Wish List</button>
                 </div>
-            </div>`
+            </div>`;
         });
 
-        document.getElementById('resultado').innerHTML = searchGame
+        document.getElementById('resultado').innerHTML = searchGame;
 
     } catch (error) {
         alert('Erro ao consultar ação: ' + error.message);
@@ -43,12 +55,80 @@ const searchGame = async (event) => {
     }
 }
 
+// Função para adicionar jogo na biblioteca
 function libraryAppid(appid) {
-    library.push(appid)
-    console.log(library)
+    library.push(appid);
+    library = removeDuplicates(library)
+    console.log(library);
+    saveToLocalStorage(); // Salva o array atualizado no localStorage
 }
 
-function cartAppid(appid) {
-    cart.push(appid)
-    console.log(cart)
+// Função para adicionar jogo na lista de desejos
+function wishAppid(appid) {
+    wish.push(appid);
+    wish = removeDuplicates(wish)
+    console.log(wish);
+    saveToLocalStorage(); // Salva o array atualizado no localStorage
+}
+
+// Função para carregar cartões da biblioteca
+const libraryCards = async (event) => {
+    event.preventDefault();
+
+    console.log(library);
+
+    for (const appid of library) {
+        const game = await loadCards(appid);
+        if (game && game[appid] && game[appid].success) {
+            const gameData = game[appid].data;
+            console.log(gameData);
+            document.getElementById('mainlibrary').innerHTML += `
+            <div class="game">
+                <a hidden>${appid}</a>
+                <img src="${gameData.header_image}" alt="logo">
+                <a>${gameData.name}</a>
+            </div>`;
+        }
+    }
+}
+
+// Função para carregar cartões da lista de desejos
+const wishCards = async (event) => {
+    event.preventDefault();
+
+    console.log(wish);
+
+    for (const appid of wish) {
+        const game = await loadCards(appid);
+        if (game && game[appid] && game[appid].success) {
+            const gameData = game[appid].data;
+            console.log(gameData);
+            document.getElementById('mainwish').innerHTML += `
+            <div class="game">
+                <a hidden>${appid}</a>
+                <img src="${gameData.header_image}" alt="logo">
+                <a>${gameData.name}</a>
+            </div>`;
+        }
+    }
+}
+
+// Função para carregar dados dos jogos
+async function loadCards(appid) {
+    try {
+        const response = await fetch(`https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/appdetails?appids=${appid}`);
+        
+        if (!response.ok) {
+            throw new Error('Erro ao consultar ação!');
+        }
+
+        const result = await response.json();
+
+        console.log(result);
+
+        return result;
+    } catch (error) {
+        alert('Erro ao consultar ação: ' + error.message);
+        console.error('ERROR', error);
+    }
 }

@@ -221,8 +221,16 @@ div#mainsearch {
 
 div#mainwish {
     min-height: calc(100vh - 190px);
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 div#mainlibrary {
     min-height: calc(100vh - 190px);
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 100px;
+    margin-right: 100px;
 }
