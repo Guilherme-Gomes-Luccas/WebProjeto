@@ -8,8 +8,13 @@ const saveToLocalStorage = () => {
     localStorage.setItem('wish', JSON.stringify(wish));
 }
 
-const removeDuplicates = (array) => {
-    return [...new Set(array)];
+// Função para remover duplicatas baseado no appid
+function removeDuplicates(array) {
+    const unique = {};
+    array.forEach(item => {
+        unique[item.appid] = item;
+    });
+    return Object.values(unique);
 }
 
 // Função para buscar jogo
@@ -57,7 +62,9 @@ const searchGame = async (event) => {
 
 // Função para adicionar jogo na biblioteca
 function libraryAppid(appid) {
-    library.push(appid);
+    const novoItem = { appid: appid, comentario: "" };
+
+    library.push(novoItem);
     library = removeDuplicates(library)
     console.log(library);
     saveToLocalStorage(); // Salva o array atualizado no localStorage
@@ -65,7 +72,9 @@ function libraryAppid(appid) {
 
 // Função para adicionar jogo na lista de desejos
 function wishAppid(appid) {
-    wish.push(appid);
+    const novoItem = { appid: appid, comentario: "" };
+
+    wish.push(novoItem);
     wish = removeDuplicates(wish)
     console.log(wish);
     saveToLocalStorage(); // Salva o array atualizado no localStorage
@@ -84,9 +93,12 @@ const libraryCards = async (event) => {
             console.log(gameData);
             document.getElementById('mainlibrary').innerHTML += `
             <div class="game">
-                <a hidden>${appid}</a>
+                <a hidden class="appid">${appid}</a>
                 <img src="${gameData.header_image}" alt="logo">
                 <a>${gameData.name}</a>
+                <div class="gametype">
+                    <button onclick="detailsModal(event)">Ver detalhes</button>
+                </div>
             </div>`;
         }
     }
@@ -105,9 +117,12 @@ const wishCards = async (event) => {
             console.log(gameData);
             document.getElementById('mainwish').innerHTML += `
             <div class="game">
-                <a hidden>${appid}</a>
+                <a hidden class="appid">${appid}</a>
                 <img src="${gameData.header_image}" alt="logo">
                 <a>${gameData.name}</a>
+                <div class="gametype">
+                    <button onclick="detailsModal(event)">Ver detalhes</button>
+                </div>
             </div>`;
         }
     }
@@ -132,3 +147,53 @@ async function loadCards(appid) {
         console.error('ERROR', error);
     }
 }
+
+const detailsModal = async (event) => {
+    try {
+        const appid = event.target.closest('.game').querySelector('.appid').textContent
+        console.log(appid)
+        modal = event.target.closest('.main').querySelector('.modal')
+        
+        const response = await fetch(`https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/appdetails?appids=${appid}`);
+        
+        if (!response.ok) {
+            throw new Error('Erro ao consultar ação!');
+        }
+
+        const result = await response.json();
+
+        console.log(result);
+        
+
+        document.querySelector('.modal-content').innerHTML = `
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>${result[appid].data.name}</h2>
+            <img src="${result[appid].data.header_image}" alt="logo">
+            <div class="description">${result[appid].data.short_description}</div>
+            <div class="requirements">${result[appid].data.pc_requirements.minimum}</div>
+            <div class="price">
+                <a><strong>Preço: </strong>${result[appid].data.price_overview.final_formatted}</a>
+            </div>
+        `
+
+        if (event.target.closest('.main').id === "mainlibrary") {
+            console.log(event.target.closest('.main').id)
+            document.querySelector('.modal-content').innerHTML += `
+                <div class="comment">
+                    <textarea></textarea>
+                </div>
+            `
+        } else {
+            console.log(event.target.closest('.main').id)
+        }
+
+        modal.style.display = 'block'
+    } catch (error) {
+        alert('Erro ao consultar ação: ' + error.message);
+        console.error('ERROR', error);
+    }
+}
+
+function closeModal() {
+    document.querySelector('.modal').style.display = "none";
+  }
