@@ -87,13 +87,12 @@ const libraryCards = async (event) => {
     console.log(library);
 
     for (const appid of library) {
-        const game = await loadCards(appid);
-        if (game && game[appid] && game[appid].success) {
-            const gameData = game[appid].data;
-            console.log(gameData);
+        const game = await loadCards(appid.appid);
+        if (game && game[appid.appid] && game[appid.appid].success) {
+            const gameData = game[appid.appid].data; 
             document.getElementById('mainlibrary').innerHTML += `
             <div class="game">
-                <a hidden class="appid">${appid}</a>
+                <a hidden class="appid">${appid.appid}</a>
                 <img src="${gameData.header_image}" alt="logo">
                 <a>${gameData.name}</a>
                 <div class="gametype">
@@ -111,13 +110,13 @@ const wishCards = async (event) => {
     console.log(wish);
 
     for (const appid of wish) {
-        const game = await loadCards(appid);
-        if (game && game[appid] && game[appid].success) {
-            const gameData = game[appid].data;
-            console.log(gameData);
+        const game = await loadCards(appid.appid);
+        if (game && game[appid.appid] && game[appid.appid].success) {
+            const gameData = game[appid.appid].data;
+            console.log(gameData + "oi");
             document.getElementById('mainwish').innerHTML += `
             <div class="game">
-                <a hidden class="appid">${appid}</a>
+                <a hidden class="appid">${appid.appid}</a>
                 <img src="${gameData.header_image}" alt="logo">
                 <a>${gameData.name}</a>
                 <div class="gametype">
@@ -151,7 +150,7 @@ async function loadCards(appid) {
 const detailsModal = async (event) => {
     try {
         const appid = event.target.closest('.game').querySelector('.appid').textContent
-        console.log(appid)
+        console.log(appid + "bunda")
         modal = event.target.closest('.main').querySelector('.modal')
         
         const response = await fetch(`https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/appdetails?appids=${appid}`);

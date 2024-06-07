@@ -238,6 +238,7 @@ div#mainlibrary {
 .modal {
     display: none;  /* Hidden by default */
     position: fixed; /* Stay in place */
+    padding: 100px;
     z-index: 1; /* Sit on top */
     left: 0;
     top: 0;
