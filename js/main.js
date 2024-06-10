@@ -223,7 +223,7 @@ function addComment(appid, pageType){
             //console.log(game)
         }
     } else if(pageType === "wish"){
-        const game = library.find(item => item.appid == appid);
+        const game = wish.find(item => item.appid == appid);
         if (game) {
             game.comentario = comentario;
             //console.log(game)
@@ -239,6 +239,7 @@ function deleteGame(appid, pageType) {
     } else if (pageType === "wish") {
         wish = wish.filter(item => item.appid != appid);
     }
+
     saveToLocalStorage();
     closeModal();
     // Recarrega a página
