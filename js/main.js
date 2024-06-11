@@ -24,7 +24,11 @@ const searchGame = async (event) => {
     const search = document.getElementById('nome').value;
     //console.log('Nome do jogo:', search);
 
-    document.getElementById('busca_text').innerText = `Resultado da busca para: ${search}`;
+    if (search === '') {
+        document.getElementById('busca_text').innerText = `Digite algo para que a busca seja feita`;
+    }else {
+        document.getElementById('busca_text').innerText = `Resultado da busca para: ${search}`;
+    }
 
     try {
         const response = await fetch(`https://cors-anywhere.herokuapp.com/https://steamcommunity.com/actions/SearchApps/${search}`);
@@ -68,6 +72,7 @@ function libraryAppid(appid) {
     library = removeDuplicates(library);
     //console.log(library);
     saveToLocalStorage(); // Salva o array atualizado no localStorage
+    window.alert("Jogo adicionado a biblioteca com sucesso!");
 }
 
 // Função para adicionar jogo na lista de desejos
@@ -78,6 +83,7 @@ function wishAppid(appid) {
     wish = removeDuplicates(wish);
     //console.log(wish);
     saveToLocalStorage(); // Salva o array atualizado no localStorage
+    window.alert("Jogo adicionado a lista de desejos com sucesso!");
 }
 
 // Função para carregar cartões da biblioteca
@@ -190,7 +196,7 @@ const detailsModal = async (event, pageType) => {
             <div class="description">${gameData.short_description}</div>
             <div class="requirements">${gameData.pc_requirements.minimum}</div>
             <div class="price">
-                <a><strong>Preço: </strong>${gameData.price_overview.final_formatted ? gameData.price_overview.final_formatted : "N/A"}</a>
+                <a><strong>Preço: </strong>${gameData?.price_overview?.final_formatted ? gameData?.price_overview?.final_formatted : "N/A"}</a>
             </div>
             <br>
             <div class="comment">
@@ -221,12 +227,14 @@ function addComment(appid, pageType){
         if (game) {
             game.comentario = comentario;
             //console.log(game)
+            window.alert("Sua review sobre o jogo foi adicionada com sucesso");
         }
     } else if(pageType === "wish"){
         const game = wish.find(item => item.appid == appid);
         if (game) {
             game.comentario = comentario;
             //console.log(game)
+            window.alert("Sua expectativas para o jogo foram salvas com sucesso");
         }
     }
     saveToLocalStorage();
@@ -244,6 +252,7 @@ function deleteGame(appid, pageType) {
     closeModal();
     // Recarrega a página
     window.location.reload();
+    window.alert("Jogo deletado da lista com sucesso");
 }
 
 function closeModal() {
